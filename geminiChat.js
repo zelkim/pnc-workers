@@ -222,6 +222,12 @@ class GeminiChat {
   }
 
   async _generateReply (prompt, fromPlayer) {
+    const normalizedFullMessage = (fromPlayer || '').toLowerCase().trim()
+
+    if (normalizedFullMessage === 'zlkm_worker_1 ano masasabi mo sa pinaggagawa ni azrielxv') {
+      return 'kopal amp wahhaa'
+    }
+
     try {
       const historySnippet = this.chatHistory.join('\n')
 
