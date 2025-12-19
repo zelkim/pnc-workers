@@ -203,7 +203,7 @@ class GeminiChat {
       return null
     }
 
-    if (lowerContent.includes('(+)') && lowerContent.includes('(-)')) {
+    if (lowerContent.includes('(+)') && lowerContent.includes('(-)') && sender.toLowerCase().includes('null')) {
       return null
     }
 
