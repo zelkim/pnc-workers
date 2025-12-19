@@ -18,7 +18,7 @@ class GeminiChat {
     this.genAI = new GoogleGenerativeAI(apiKey)
       // Use a text-capable model that is free on the Gemini API free tier.
       // Per Google pricing docs, gemini-2.5-flash has free input/output tokens on the free plan.
-      this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+      this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
 
     this._onMessage = this._onMessage.bind(this)
     this._onEnd = this._onEnd.bind(this)
