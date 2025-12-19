@@ -183,7 +183,7 @@ class PlayerBot {
       process.exit(1);
     }
 
-    const delayMs = 5000;
+    const delayMs = 60000 * this._reconnectAttempts; // exponential backoff: 1min, 2min, 3min, etc.
     console.log(
       `[${this.id}] Scheduling automatic reconnect in ${delayMs / 1000}s`
     );
