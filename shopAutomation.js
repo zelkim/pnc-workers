@@ -3,7 +3,9 @@ class ShopAutomation {
     this.playerBot = playerBot
     this.bot = playerBot.bot
     this.shopInterval = null
+    this.payInterval = null
     this._isSellingCactus = false
+    this._isPaying = false
     this._chatCaptureRemaining = 0
     this._onMessage = this._onMessage.bind(this)
 
@@ -49,28 +51,49 @@ class ShopAutomation {
   }
 
   _startShopLoop () {
-    if (this.shopInterval) return
+    if (!this.shopInterval) {
+      console.log(`[${this.playerBot.id}] Starting sellAllCactus loop (every 2.5 minutes on survival)`)
 
-    console.log(`[${this.playerBot.id}] Starting sellAllCactus loop (every 5s on survival)`)
+      this.shopInterval = setInterval(async () => {
+        try {
+          if (this.playerBot.currentServer !== 'survival') return
 
-    this.shopInterval = setInterval(async () => {
-      try {
-        if (this.playerBot.currentServer !== 'survival') return
+          if (this._isSellingCactus) {
+            console.log(`[${this.playerBot.id}] sellAllCactus already running; skipping this tick`)
+            return
+          }
 
-        if (this._isSellingCactus) {
-          console.log(`[${this.playerBot.id}] sellAllCactus already running; skipping this tick`)
-          return
+          this._isSellingCactus = true
+          await this.sellAllCactus()
+        } catch (err) {
+          console.error(`[${this.playerBot.id}] Error in sellAllCactus loop:`, err)
+        } finally {
+          this._isSellingCactus = false
         }
+      }, 60000 * 2.5)
+    }
 
-        this._isSellingCactus = true
-        await this.sellAllCactus()
-      } catch (err) {
-        console.error(`[${this.playerBot.id}] Error in sellAllCactus loop:`, err)
-      } finally {
-        this._isSellingCactus = false
-      }
-    }, 60000 * 5)
-        // }, 10000)
+    if (!this.payInterval) {
+      console.log(`[${this.playerBot.id}] Starting payAll loop (every 5 minutes on survival)`)
+
+      this.payInterval = setInterval(async () => {
+        try {
+          if (this.playerBot.currentServer !== 'survival') return
+
+          if (this._isPaying) {
+            console.log(`[${this.playerBot.id}] payAll already running; skipping this tick`)
+            return
+          }
+
+          this._isPaying = true
+          await this.payAll()
+        } catch (err) {
+          console.error(`[${this.playerBot.id}] Error in payAll loop:`, err)
+        } finally {
+          this._isPaying = false
+        }
+      }, 60000 * 5)
+    }
 
   }
 
@@ -79,6 +102,11 @@ class ShopAutomation {
     if (this.shopInterval) {
       clearInterval(this.shopInterval)
       this.shopInterval = null
+    }
+
+    if (this.payInterval) {
+      clearInterval(this.payInterval)
+      this.payInterval = null
     }
   }
 
@@ -207,7 +235,7 @@ class ShopAutomation {
       
       // Small delay to avoid spamming commands and to let
       // the server process the sell.
-      await sleep(3000)
+      await sleep(2000)
     }
 
     // After selling, capture new balance and report earnings
@@ -225,13 +253,6 @@ class ShopAutomation {
     const resultWhisper = `/w zlkm_ Cactus sold! - Earned: ${earnedText}`
     console.log(`[${this.playerBot.id}] Finished sellAllCactus. Sending summary whisper: ${resultWhisper}`)
     bot.chat(resultWhisper)
-
-    // After reporting, pay all current balance to zlkm_
-    try {
-      await this.payAll()
-    } catch (err) {
-      console.error(`[${this.playerBot.id}] Error while running payAll after cactus sell:`, err)
-    }
   }
 
   async payAll () {
