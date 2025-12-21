@@ -139,6 +139,12 @@ class ShopAutomation {
       const handler = (msg) => {
         if (resolved) return
         const text = msg.toString()
+
+        // Only handle messages that look like a /bal response
+        if (!text.includes('Balance:')) {
+          return
+        }
+
         resolved = true
         console.log(`[${this.playerBot.id}] Captured /bal response: "${text}"`)
         bot.removeListener('message', handler)

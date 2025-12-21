@@ -205,9 +205,9 @@ class PlayerBot {
     // Recreate automation for the new bot instance
     this.shopAutomation = new ShopAutomation(this);
 
-    if (this.options.enableGemini) {
-      this._setupGeminiChat();
-    }
+    // if (this.options.enableGemini) {
+    //   this._setupGeminiChat();
+    // }
 
     // Reattach all event handlers to the new bot instance
     this._setupEventHandlers();
