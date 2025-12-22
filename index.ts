@@ -11,6 +11,8 @@ const port = parseInt(process.env.MC_PORT || '25565', 10)
 const accounts = [
   { username: 'zlkm_worker_1', home_cmd: '/home' },
   { username: 'zlkm_worker_2', home_cmd: '/team home' },
+  { username: 'zlkm_worker_3', home_cmd: '/home' },
+
   // { username: 'zlkm_', home_cmd: '/home', password: process.env.MAIN_PASSWORD }, // example with password
   // { username: 'pnc-bot-2' }
 ]
