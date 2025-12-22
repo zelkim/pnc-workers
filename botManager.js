@@ -20,9 +20,9 @@ class PlayerBot {
     this.shopAutomation = new ShopAutomation(this);
 
     this.geminiChat = null;
-    if (options.enableGemini) {
-      this._setupGeminiChat();
-    }
+    // if (options.enableGemini) {
+    //   this._setupGeminiChat();
+    // }
 
     this._setupEventHandlers();
 
@@ -292,7 +292,7 @@ class BotManager {
     const index = this.bots.length;
     const mergedOptions = {
       ...options,
-      enableGemini: options.enableGemini || index === 0,
+      enableGemini: options.enableGemini,
     };
 
     const playerBot = new PlayerBot(id, mergedOptions);
