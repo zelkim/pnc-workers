@@ -241,7 +241,7 @@ class ShopAutomation {
       
       // Small delay to avoid spamming commands and to let
       // the server process the sell.
-      await sleep(2000)
+      await sleep(2500)
     }
 
     // After selling, capture new balance and report earnings
