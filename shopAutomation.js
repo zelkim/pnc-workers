@@ -6,8 +6,6 @@ class ShopAutomation {
     this.payInterval = null
     this._isSellingCactus = false
     this._isPaying = false
-    this._chatCaptureRemaining = 0
-    this._onMessage = this._onMessage.bind(this)
 
     this._onWindowOpen = this._onWindowOpen.bind(this)
     this.bot.on('windowOpen', this._onWindowOpen)
@@ -29,25 +27,11 @@ class ShopAutomation {
     if (this.bot) {
       this.bot.removeListener('windowOpen', this._onWindowOpen)
       this.bot.removeListener('end', this._onEnd)
-      this.bot.removeListener('message', this._onMessage)
     }
   }
 
   _onEnd () {
     this._stopShopLoop()
-  }
-
-  _onMessage (msg) {
-    if (this._chatCaptureRemaining <= 0) return
-
-    const text = msg.toString()
-    console.log(`[${this.playerBot.id}] [capture] chat: "${text}"`)
-
-    this._chatCaptureRemaining--
-    if (this._chatCaptureRemaining <= 0) {
-      console.log(`[${this.playerBot.id}] Finished capturing 5 chat messages after cactus click`)
-      if (this.bot) this.bot.removeListener('message', this._onMessage)
-    }
   }
 
   _startShopLoop () {
@@ -98,7 +82,6 @@ class ShopAutomation {
   }
 
   _stopShopLoop () {
-    // No-op kept for backwards compatibility.
     if (this.shopInterval) {
       clearInterval(this.shopInterval)
       this.shopInterval = null
@@ -316,12 +299,6 @@ class ShopAutomation {
 
     console.log(`[${this.playerBot.id}] windowOpen: title="${flatTitle}", raw=${window.title}`)
 
-    // deprecated
-    // if (flatTitle === 'ѕᴇʟᴇᴄᴛ ᴀ ѕʜᴏᴘ ᴄᴀᴛᴇɢᴏʀʏ...') {
-    //   this._clickShopCategoryBread(window)
-    //   return
-    // }
-
     // Farm & Food page where cactus item is listed
     if (flatTitle === 'ꜰᴀʀᴍ ᴀɴᴅ ꜰᴏᴏᴅ [ᴘᴀɢᴇ 1/5]') {
       this._clickFarmFoodCactus(window)
@@ -337,10 +314,6 @@ class ShopAutomation {
   _logSlots (window) {
     const slots = window.slots || []
     console.log(`[${this.playerBot.id}] Inspecting window slots (total ${slots.length})`)
-    // slots.forEach((item, index) => {
-    //   if (!item) return
-    //   console.log(`[$${this.playerBot.id}]  slot ${index}: name="${item.name}", displayName="${item.displayName}"`)
-    // })
     return slots
   }
 
@@ -388,7 +361,7 @@ class ShopAutomation {
         }
 
         console.log(
-          `[${this.playerBot.id}] Cactus click completed, starting capture of next 5 chat messages`
+          `[${this.playerBot.id}] Cactus click completed`
         )
       })
     } catch (e) {
